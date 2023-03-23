@@ -12,7 +12,7 @@ app.use(express.json());
 app.post("/summarize", async (req, res) => {
   try {
     const reviews = req.body.reviews.join("\n\n");
-    const prompt = `Summarize the following product reviews in 5 numbered points and at last mention the percentage of negative reviews. If reviews are less than or equal to 5 then just say 'A summary is not required due to lack of reviews'. Reviews:\n\n${reviews}\n\nSummary:\n`;
+    const prompt = `Summarize the following product reviews in 5 numbered points and at last mention the percentage of negative reviews. If reviews are less than or equal to 5 then just say 'A summary is not required due to lack of reviews'. Don't repeat your points while summarising. Never mention the total number of reviews. Here are the reviews:\n\n${reviews}\n\nSummary:\n`;  //GPT sometimes cannot detect separation of reviews and thus gives wrong total no. of reviews therefore I have instructed it to not mention total no. of reviews for the time being. I have verified through console.logs that all reviews (max 10 pages) are supplied to it.
 
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
@@ -22,7 +22,7 @@ app.post("/summarize", async (req, res) => {
           {
             role: "system",
             content:
-              "You are a helpful assistant that summarizes product reviews when the reviews given to you are more than 5, if they are less than or equal to 5 then you just say 'A summary is not required due to lack of reviews'",
+              "You are a helpful assistant that summarizes product reviews",
           },
           {
             role: "user",
@@ -31,7 +31,6 @@ app.post("/summarize", async (req, res) => {
         ],
         max_tokens: 200,
         n: 1,
-        stop: null,
         temperature: 0.4,
       },
       {
