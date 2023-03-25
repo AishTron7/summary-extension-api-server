@@ -22,7 +22,7 @@ app.post("/summarize", async (req, res) => {
           {
             role: "system",
             content:
-              "You are a helpful assistant that summarizes product reviews",
+              "You are a helpful assistant that summarizes product reviews if the reviews given to you are more than five. If reviews are less than or equal to 5 then just say 'A summary is not required due to lack of reviews'. Don't repeat your points while summarising. Never mention the total number of reviews.",
           },
           {
             role: "user",
