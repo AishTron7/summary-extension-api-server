@@ -9,6 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("© Aishwary Shukla 2023");
+});
+
+app.get("/summarize", (req, res) => {
+  res.send("© Aishwary Shukla 2023");
+});
+
 app.post("/summarize", async (req, res) => {
   try {
     const reviews = req.body.reviews.join("\n\n");
