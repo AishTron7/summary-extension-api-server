@@ -20,7 +20,7 @@ app.get("/summarize", (req, res) => {
 app.post("/summarize", async (req, res) => {
   try {
     const reviews = req.body.reviews.join("\n\n");
-    const prompt = `Summarize the following product reviews in 5 numbered points and at last mention the percentage of negative reviews. Don't repeat your points while summarising. Never mention the total number of reviews. Here are the reviews:\n\n${reviews}\n\nSummary:\n`;  //GPT sometimes cannot detect separation of reviews and thus gives wrong total no. of reviews therefore I have instructed it to not mention total no. of reviews for the time being. I have verified through console.logs that all reviews (max 10 pages) are supplied to it.
+    const prompt = `Summarize the following product reviews in 5 numbered points and at last mention the percentage of negative reviews. If no reviews are provided then just say 'Lack of reviews, make sure you're on the right page' and don't provide any summary. Here are the reviews:\n\n${reviews}\n\nSummary:\n`;  
 
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
@@ -30,7 +30,7 @@ app.post("/summarize", async (req, res) => {
           {
             role: "system",
             content:
-              "You are a helpful assistant that summarizes product reviews if the reviews given to you are more than five. Don't repeat your points while summarising. Never mention the total number of reviews.",
+              "You are a helpful assistant that summarizes product reviews when they are given to you. If no reviews are provided, you just say: 'Lack of reviews, make sure you're on the right page' and don't provide any summary. Don't repeat your points while summarising. Never mention the total number of reviews.",   //GPT sometimes cannot detect separation of reviews and thus gives wrong total no. of reviews therefore I have instructed it to not mention total no. of reviews for the time being. I have verified through console.logs that all reviews (max 10 pages) are supplied to it.
           },
           {
             role: "user",
